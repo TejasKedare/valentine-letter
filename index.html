@@ -67,7 +67,6 @@
 
     #noBtn { background: white; color: #6a0dad; position: absolute; }
 
-    /* Mobile layout */
     @media (max-width: 600px) {
       .buttons { justify-content: space-between; }
       #noBtn { position: static; }
@@ -133,12 +132,38 @@
       z-index: 10;
     }
 
-    .audio-control:hover { transform: scale(1.1); }
+    .loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000cc;
+      z-index: 20;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #ffffff55;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
-  <div class="card" id="mainCard">
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <div>Loading music… 💜</div>
+  </div>
+
+  <div class="card" id="mainCard" style="display:none">
     <h1>Will you be my Valentine?</h1>
     <div class="name">Apurva 💜</div>
     <p>Life feels calmer, happier, and more meaningful with you in it.</p>
@@ -162,17 +187,24 @@
 
   <div class="letter" id="letter"></div>
 
-  <audio id="music" src="i-think-they-call-this-love.mp3"></audio>
+  <audio id="music" src="i-think-they-call-this-love.mp3" preload="auto"></audio>
   <div class="audio-control" id="audioBtn">⏸️</div>
 
   <script>
+    const loader = document.getElementById("loader");
+    const mainCard = document.getElementById("mainCard");
+    const music = document.getElementById("music");
+
+    music.addEventListener("canplaythrough", () => {
+      loader.style.display = "none";
+      mainCard.style.display = "block";
+    });
+
     const noBtn = document.getElementById("noBtn");
     const yesBtn = document.getElementById("yesBtn");
     const buttons = document.getElementById("buttons");
-    const mainCard = document.getElementById("mainCard");
     const slideshow = document.getElementById("slideshow");
     const letter = document.getElementById("letter");
-    const music = document.getElementById("music");
     const audioBtn = document.getElementById("audioBtn");
 
     const letterContent = `My Love Apurva 💜,\n\nYou came into my life when I had nothing… yet you still chose me, accepted me, and loved me just the way I was.\n\nI promise I will work hard, become successful, and spend my life keeping you happy and proud.\n\nI love your eyes, your smile, your caring heart, and even the love in the food you make. You are truly sarva gun sampanna — smart, talented, kind, and beautiful in every way.\n\nMay all your dreams come true. Your happiness is my biggest wish.\n\nIn every timeline, every universe, every lifetime… I will always choose you as my wife.\n\nForever yours,\n❤️`;
@@ -190,7 +222,7 @@
       }
 
       noClickCount++;
-      const scale = Math.max(1 - noClickCount * 0.08, 0);
+      const scale = Math.max(1 - noClickCount * 0.18, 0);
       noBtn.style.transform = `scale(${scale})`;
       noBtn.style.opacity = scale;
 
