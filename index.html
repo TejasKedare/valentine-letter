@@ -58,7 +58,7 @@
       border-radius: 999px;
       font-size: 15px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.3s ease;
       font-weight: 600;
     }
 
@@ -67,18 +67,12 @@
 
     #noBtn { background: white; color: #6a0dad; position: absolute; }
 
-    /* 📱 Mobile layout changes */
+    /* Mobile layout */
     @media (max-width: 600px) {
-      .buttons {
-        justify-content: space-between;
-      }
-
-      #noBtn {
-        position: static; /* keep side‑by‑side on mobile */
-      }
+      .buttons { justify-content: space-between; }
+      #noBtn { position: static; }
     }
 
-    /* Responsive slideshow */
     .slideshow {
       width: 100%;
       max-width: 520px;
@@ -98,18 +92,13 @@
       position: absolute;
       max-width: 100%;
       max-height: 100%;
-      width: auto;
-      height: auto;
       object-fit: contain;
       opacity: 0;
       transform: scale(1.05);
-      transition: opacity 0.8s ease-in-out, transform 2.5s ease-in-out;
+      transition: opacity 0.8s ease, transform 2.5s ease;
     }
 
-    .slideshow img.active {
-      opacity: 1;
-      transform: scale(1);
-    }
+    .slideshow img.active { opacity: 1; transform: scale(1); }
 
     .letter {
       max-width: 720px;
@@ -122,7 +111,6 @@
       backdrop-filter: blur(12px);
       white-space: pre-wrap;
       text-align: left;
-      animation: fadeIn 1.5s ease;
       display: none;
     }
 
@@ -187,25 +175,13 @@
     const music = document.getElementById("music");
     const audioBtn = document.getElementById("audioBtn");
 
-    const letterContent = `My Love Apurva 💜,
+    const letterContent = `My Love Apurva 💜,\n\nYou came into my life when I had nothing… yet you still chose me, accepted me, and loved me just the way I was.\n\nI promise I will work hard, become successful, and spend my life keeping you happy and proud.\n\nI love your eyes, your smile, your caring heart, and even the love in the food you make. You are truly sarva gun sampanna — smart, talented, kind, and beautiful in every way.\n\nMay all your dreams come true. Your happiness is my biggest wish.\n\nIn every timeline, every universe, every lifetime… I will always choose you as my wife.\n\nForever yours,\n❤️`;
 
-You came into my life when I had nothing… yet you still chose me, accepted me, and loved me just the way I was. That is something I will be grateful for forever.
-
-I promise you that I will work hard, become successful, and spend my whole life keeping you happy and proud.
-
-I love your beautiful eyes, your sweet smile, your caring heart… and even the love you put into the food you make. You are truly *sarva gun sampanna* : smart, talented, kind, and full of warmth. I feel deeply blessed to have you in my life.
-
-May all your dreams come true. Your happiness is my biggest wish. I love you more than words can ever explain.
-
-If there are many timelines, many worlds, or many universes… I would still choose you every single time. And in every lifetime, I would want you to be my wife again.
-
-Forever yours,
-❤️`;
+    let noClickCount = 0;
 
     function moveNoButton() {
       const isMobile = window.innerWidth < 600;
 
-      // Desktop → escape movement
       if (!isMobile) {
         const x = Math.random() * 200 - 100;
         const y = Math.random() * 120 - 60;
@@ -213,20 +189,18 @@ Forever yours,
         return;
       }
 
-      // Mobile → shrink logic
       noClickCount++;
-
-      const scale = Math.max(1 - noClickCount * 0.2, 0);
+      const scale = Math.max(1 - noClickCount * 0.08, 0);
       noBtn.style.transform = `scale(${scale})`;
       noBtn.style.opacity = scale;
 
-      if (noClickCount >= 4) {
-        noBtn.style.display = "none";
-        buttons.style.justifyContent = "center"; // center YES button
+      if (noClickCount >= 5) {
+        setTimeout(() => {
+          noBtn.style.display = "none";
+          buttons.style.justifyContent = "center";
+        }, 200);
       }
     }
-
-    let noClickCount = 0;
 
     noBtn.addEventListener("mouseenter", moveNoButton);
     noBtn.addEventListener("touchstart", moveNoButton);
@@ -235,7 +209,6 @@ Forever yours,
     yesBtn.addEventListener("click", () => {
       mainCard.style.display = "none";
       slideshow.style.display = "flex";
-
       startSlideshow();
       music.play().catch(() => {});
     });
