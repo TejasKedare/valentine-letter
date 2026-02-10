@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Will You Be My Valentine, Apurva? 💜</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #6a0dad, #a020f0, #ff69b4, #ff4d6d);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      padding: 20px;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px 50px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      max-width: 520px;
+      width: 100%;
+      animation: fadeIn 1.2s ease;
+      margin-bottom: 30px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 { font-size: 26px; margin-bottom: 12px; }
+    .name { font-size: 32px; font-weight: bold; color: #ffd6ff; margin-bottom: 20px; }
+    p { font-size: 15px; margin-bottom: 28px; opacity: 0.95; }
+
+    .buttons { display: flex; gap: 16px; justify-content: center; position: relative; }
+
+    button {
+      border: none;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-weight: 600;
+    }
+
+    #yesBtn { background: linear-gradient(135deg, #ff69b4, #ff4d6d); color: white; box-shadow: 0 8px 18px rgba(255, 77, 109, 0.5); }
+    #yesBtn:hover { transform: scale(1.08); }
+
+    #noBtn { background: white; color: #6a0dad; position: absolute; }
+
+    /* 📱 Mobile layout changes */
+    @media (max-width: 600px) {
+      .buttons {
+        justify-content: space-between;
+      }
+
+      #noBtn {
+        position: static; /* keep side‑by‑side on mobile */
+      }
+    }
+
+    /* Responsive slideshow */
+    .slideshow {
+      width: 100%;
+      max-width: 520px;
+      height: min(70vh, 400px);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      margin-bottom: 20px;
+      position: relative;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .slideshow img {
+      position: absolute;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      opacity: 0;
+      transform: scale(1.05);
+      transition: opacity 0.8s ease-in-out, transform 2.5s ease-in-out;
+    }
+
+    .slideshow img.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .letter {
+      max-width: 720px;
+      background: rgba(255,255,255,0.15);
+      padding: 26px;
+      border-radius: 20px;
+      line-height: 1.7;
+      font-size: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      white-space: pre-wrap;
+      text-align: left;
+      animation: fadeIn 1.5s ease;
+      display: none;
+    }
+
+    .audio-control {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      font-size: 26px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+      z-index: 10;
+    }
+
+    .audio-control:hover { transform: scale(1.1); }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="mainCard">
+    <h1>Will you be my Valentine?</h1>
+    <div class="name">Apurva 💜</div>
+    <p>Life feels calmer, happier, and more meaningful with you in it.</p>
+
+    <div class="buttons" id="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 🙈</button>
+    </div>
+  </div>
+
+  <div class="slideshow" id="slideshow">
+    <img src="photo1.jpeg" class="active" />
+    <img src="photo2.jpeg" />
+    <img src="photo3.jpeg" />
+    <img src="photo4.jpeg" />
+    <img src="photo5.jpeg" />
+    <img src="photo6.jpeg" />
+    <img src="photo7.jpeg" />
+    <img src="photo8.jpeg" />
+  </div>
+
+  <div class="letter" id="letter"></div>
+
+  <audio id="music" src="i-think-they-call-this-love.mp3"></audio>
+  <div class="audio-control" id="audioBtn">⏸️</div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const buttons = document.getElementById("buttons");
+    const mainCard = document.getElementById("mainCard");
+    const slideshow = document.getElementById("slideshow");
+    const letter = document.getElementById("letter");
+    const music = document.getElementById("music");
+    const audioBtn = document.getElementById("audioBtn");
+
+    const letterContent = `My Love Apurva 💜,
+
+You came into my life when I had nothing… yet you still chose me, accepted me, and loved me just the way I was. That is something I will be grateful for forever.
+
+I promise you that I will work hard, become successful, and spend my whole life keeping you happy and proud.
+
+I love your beautiful eyes, your sweet smile, your caring heart… and even the love you put into the food you make. You are truly *sarva gun sampanna* : smart, talented, kind, and full of warmth. I feel deeply blessed to have you in my life.
+
+May all your dreams come true. Your happiness is my biggest wish. I love you more than words can ever explain.
+
+If there are many timelines, many worlds, or many universes… I would still choose you every single time. And in every lifetime, I would want you to be my wife again.
+
+Forever yours,
+❤️`;
+
+    function moveNoButton() {
+      const isMobile = window.innerWidth < 600;
+
+      // Desktop → escape movement
+      if (!isMobile) {
+        const x = Math.random() * 200 - 100;
+        const y = Math.random() * 120 - 60;
+        noBtn.style.transform = `translate(${x}px, ${y}px)`;
+        return;
+      }
+
+      // Mobile → shrink logic
+      noClickCount++;
+
+      const scale = Math.max(1 - noClickCount * 0.2, 0);
+      noBtn.style.transform = `scale(${scale})`;
+      noBtn.style.opacity = scale;
+
+      if (noClickCount >= 4) {
+        noBtn.style.display = "none";
+        buttons.style.justifyContent = "center"; // center YES button
+      }
+    }
+
+    let noClickCount = 0;
+
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", moveNoButton);
+    noBtn.addEventListener("click", moveNoButton);
+
+    yesBtn.addEventListener("click", () => {
+      mainCard.style.display = "none";
+      slideshow.style.display = "flex";
+
+      startSlideshow();
+      music.play().catch(() => {});
+    });
+
+    audioBtn.addEventListener("click", () => {
+      if (music.paused) {
+        music.play();
+        audioBtn.textContent = "⏸️";
+      } else {
+        music.pause();
+        audioBtn.textContent = "▶️";
+      }
+    });
+
+    function startSlideshow() {
+      const slides = document.querySelectorAll(".slideshow img");
+      let index = 0;
+
+      const interval = setInterval(() => {
+        slides[index].classList.remove("active");
+        index++;
+
+        if (index >= slides.length) {
+          clearInterval(interval);
+          slideshow.style.display = "none";
+          showLetter();
+          return;
+        }
+
+        slides[index].classList.add("active");
+      }, 2500);
+    }
+
+    function showLetter() {
+      letter.style.display = "block";
+      typeWriter();
+    }
+
+    function typeWriter() {
+      let i = 0;
+      function type() {
+        if (i < letterContent.length) {
+          letter.textContent += letterContent.charAt(i);
+          i++;
+          setTimeout(type, 35);
+        }
+      }
+      type();
+    }
+  </script>
+</body>
+</html>
