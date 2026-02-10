@@ -195,9 +195,17 @@
     const mainCard = document.getElementById("mainCard");
     const music = document.getElementById("music");
 
-    music.addEventListener("canplaythrough", () => {
+    function showMainCard() {
       loader.style.display = "none";
       mainCard.style.display = "block";
+    }
+
+    // To show when music is ready
+    music.addEventListener("canplaythrough", showMainCard);
+
+    // Fallback: if event doesn't fire on slow networks, show after page load
+    window.addEventListener("load", () => {
+      setTimeout(showMainCard, 1500);
     });
 
     const noBtn = document.getElementById("noBtn");
